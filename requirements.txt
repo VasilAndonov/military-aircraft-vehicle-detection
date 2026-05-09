@@ -1,0 +1,14 @@
+opencv-python
+numpy
+pandas
+seaborn
+pillow
+scipy
+matplotlib
+pyyaml
+torch
+torchvision
+tqdm
+ultralytics
+pycocotools
+lxml
