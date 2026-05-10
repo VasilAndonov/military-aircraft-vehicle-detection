@@ -4,6 +4,73 @@ Comparative Analysis of One-Stage (YOLOv8) and Two-Stage (Faster R-CNN) Detector
 ## Overview
 The study aims to quantify performance differences between two dominant object detection paradigms—one‑stage (YOLOv8n) and two‑stage (Faster R‑CNN with MobileNetV3‑FPN)—when applied to aerial imagery. Both models are trained and evaluated on two independent datasets: the **MVRSD‑Aerial dataset** (3 001 images, 5 vehicle classes) and the **Military‑Aircraft‑Recognition dataset** (3 842 images, 20 aircraft classes). Three specific hypotheses are tested, covering the role of background complexity, localisation precision under strict IoU thresholds, and the effect of object‑scale variation on recall. The study is a 2 × 2 factorial simulation: Architecture (YOLOv8 vs. Faster R‑CNN) × Dataset (MVRSD vehicles vs. Aircraft).
 
+## Repository Structure and Data Availability
+The complete code, results, and supplementary materials are distributed across two locations for convenience and size management.
+
+### GitHub Repository
+Theoretical notebook, article notebook and key visualisations are available in this GitHub repository:  
+[https://github.com/VasilAndonov/military-aircraft-vehicle-detection](https://github.com/VasilAndonov/military-aircraft-vehicle-detection)
+
+The repository contains the following files:
+
+```text
+military-aircraft-vehicle-detection/
+├── README.md
+├── requirements.txt
+├── article.ipynb
+├── theoretical-background.ipynb
+├── plots/
+│ ├── class-dist-MA.png
+│ ├── class-dist-MV.png
+│ ├── color-dist.png
+│ ├── conf-matrix-norm-MA.png
+│ ├── conf-matrix-norm-MV.png
+│ ├── PR-MA.png
+│ └── PR-MV.png
+```
+- `requirements.txt` – List of required Python packages to reproduce the environment;
+- `article.ipynb` – The main Jupyter notebook containing the full article text;
+- `theoretical-background.ipynb` – A notebook covering the theoretical foundations of the metrics and architectures employed;
+- `plots/` – Directory containing all figures referenced in the article.
+
+### Google Drive
+Because the raw datasets and trained model weights are large, they are provided via a Google Drive folder:  
+[https://drive.google.com/drive/folders/1mCQIK2ASnt_bOn1L8f64in64ht-Z4WNf?usp=sharing](https://drive.google.com/drive/folders/1mCQIK2ASnt_bOn1L8f64in64ht-Z4WNf?usp=sharing)
+
+The Drive folder is organised as follows:
+
+```text
+military-aircraft-vehicle-detection/
+├── data/
+│ ├── EDA.ipynb
+│ ├── MVRSD-Aerial-dataset/
+│ └── Military-Aircraft-Recognition-dataset/
+├── YOLO-MV/
+│ ├── yolo-mv.ipynb
+│ ├── yolov8n.pt
+│ ├── MVRSD_yolo/
+│ └── runs/detect/MVRSD_yolov8/
+├── YOLO-MA/
+│ ├── yolo-ma.ipynb
+│ ├── yolov8n.pt
+│ ├── Aircraft_yolo/
+│ └── runs/detect/Aircraft_yolov8/
+├── Faster-R-CNN-MV/
+│ ├── faster-r-cnn-mv.ipynb
+│ └── mvrsd_faster_rcnn_final.pth
+└── Faster-R-CNN-MA/
+├── faster-r-cnn-ma.ipynb
+└── best_faster_rcnn_mobilenet.pth
+```
+
+- `data/` – Contains the two raw datasets (`MVRSD-Aerial-dataset` and `Military-Aircraft-Recognition-dataset`) alongside an exploratory data analysis notebook (`EDA.ipynb`) that generates the class distribution, colour distribution, entropy, and edge density statistics.
+- `YOLO-MV/` – YOLOv8 training notebook for the MVRSD vehicle dataset, along with the YOLO‑formatted dataset copy, the base weights (`yolov8n.pt`), and the `runs/` folder containing evaluation outputs (confusion matrices, PR curves, F1 curves, batch prediction visualisations).
+- `YOLO-MA/` – YOLOv8 training notebook for the Military Aircraft dataset, with analogous outputs.
+- `Faster-R-CNN-MV/` – Faster R‑CNN training notebook for the MVRSD dataset, plus the saved model checkpoint (`mvrsd_faster_rcnn_final.pth`).
+- `Faster-R-CNN-MA/` – Faster R‑CNN training notebook for the Aircraft dataset, with the best model checkpoint (`best_faster_rcnn_mobilenet.pth`).
+
+Each model folder is self‑contained and can be executed independently after placing the corresponding dataset in the expected path. All notebooks include fully executable cells. The YOLOv8 base weights (`yolov8n.pt`) are downloaded automatically by the Ultralytics library when first referenced; copies are also placed in the YOLO‑MV and YOLO‑MA folders for offline use.
+
 ## Hypotheses
 1. **Background complexity and false positives**  
    - **H0:** There is no difference in spatial entropy and Canny edge density between the MVRSD‑Aerial and Military‑Aircraft‑Recognition datasets.  
@@ -80,71 +147,5 @@ No missing data are present in either dataset. All images have corresponding ann
 ## Context and Additional Information
 - Training hardware: MacBook Pro M1 16G RAM (2020).  
 - Code is provided in Jupyter notebooks within this repository. A `requirements.txt` file lists all necessary dependencies.  
-- Pre‑trained weights are not included due to size, but training scripts are fully reproducible.  
-
-## Repository Structure and Data Availability
-The complete code, results, and supplementary materials are distributed across two locations for convenience and size management.
-
-### GitHub Repository
-Theoretical notebook, article notebook and key visualisations are available in this GitHub repository:  
-[https://github.com/VasilAndonov/military-aircraft-vehicle-detection](https://github.com/VasilAndonov/military-aircraft-vehicle-detection)
-
-The repository contains the following files:
-
-```text
-military-aircraft-vehicle-detection/
-├── README.md
-├── requirements.txt
-├── article.ipynb
-├── theoretical-background.ipynb
-├── plots/
-│ ├── class-dist-MA.png
-│ ├── class-dist-MV.png
-│ ├── color-dist.png
-│ ├── conf-matrix-norm-MA.png
-│ ├── conf-matrix-norm-MV.png
-│ ├── PR-MA.png
-│ └── PR-MV.png
-```
-- `requirements.txt` – List of required Python packages to reproduce the environment;
-- `article.ipynb` – The main Jupyter notebook containing the full article text;
-- `theoretical-background.ipynb` – A notebook covering the theoretical foundations of the metrics and architectures employed;
-- `plots/` – Directory containing all figures referenced in the article.
-
-### Google Drive
-Because the raw datasets and trained model weights are large, they are provided via a Google Drive folder:  
-[https://drive.google.com/drive/folders/1mCQIK2ASnt_bOn1L8f64in64ht-Z4WNf?usp=sharing](https://drive.google.com/drive/folders/1mCQIK2ASnt_bOn1L8f64in64ht-Z4WNf?usp=sharing)
-
-The Drive folder is organised as follows:
-
-```text
-military-aircraft-vehicle-detection/
-├── data/
-│ ├── EDA.ipynb
-│ ├── MVRSD-Aerial-dataset/
-│ └── Military-Aircraft-Recognition-dataset/
-├── YOLO-MV/
-│ ├── yolo-mv.ipynb
-│ ├── yolov8n.pt
-│ ├── MVRSD_yolo/
-│ └── runs/detect/MVRSD_yolov8/
-├── YOLO-MA/
-│ ├── yolo-ma.ipynb
-│ ├── yolov8n.pt
-│ ├── Aircraft_yolo/
-│ └── runs/detect/Aircraft_yolov8/
-├── Faster-R-CNN-MV/
-│ ├── faster-r-cnn-mv.ipynb
-│ └── mvrsd_faster_rcnn_final.pth
-└── Faster-R-CNN-MA/
-├── faster-r-cnn-ma.ipynb
-└── best_faster_rcnn_mobilenet.pth
-```
-
-- `data/` – Contains the two raw datasets (`MVRSD-Aerial-dataset` and `Military-Aircraft-Recognition-dataset`) alongside an exploratory data analysis notebook (`EDA.ipynb`) that generates the class distribution, colour distribution, entropy, and edge density statistics.
-- `YOLO-MV/` – YOLOv8 training notebook for the MVRSD vehicle dataset, along with the YOLO‑formatted dataset copy, the base weights (`yolov8n.pt`), and the `runs/` folder containing evaluation outputs (confusion matrices, PR curves, F1 curves, batch prediction visualisations).
-- `YOLO-MA/` – YOLOv8 training notebook for the Military Aircraft dataset, with analogous outputs.
-- `Faster-R-CNN-MV/` – Faster R‑CNN training notebook for the MVRSD dataset, plus the saved model checkpoint (`mvrsd_faster_rcnn_final.pth`).
-- `Faster-R-CNN-MA/` – Faster R‑CNN training notebook for the Aircraft dataset, with the best model checkpoint (`best_faster_rcnn_mobilenet.pth`).
-
-Each model folder is self‑contained and can be executed independently after placing the corresponding dataset in the expected path. All notebooks include fully executable cells. The YOLOv8 base weights (`yolov8n.pt`) are downloaded automatically by the Ultralytics library when first referenced; copies are also placed in the YOLO‑MV and YOLO‑MA folders for offline use.
+- Pre‑trained weights are not included due to size, but training scripts are fully reproducible.
+ include fully executable cells. The YOLOv8 base weights (`yolov8n.pt`) are downloaded automatically by the Ultralytics library when first referenced; copies are also placed in the YOLO‑MV and YOLO‑MA folders for offline use.
